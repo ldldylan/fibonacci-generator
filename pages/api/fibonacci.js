@@ -12,37 +12,29 @@ export default async function handler(req, res) {
     const sequence = [];
     let a = 0, b = 1;
 
+    // Compute the Fibonacci sequence first
     for (let i = 1; i <= number; i++) {
-        const rows = await db.any('SELECT * FROM fibonacci WHERE id=$1', [i]);
-
-        if (rows.length > 0) {
-            sequence.push(rows[0].number);
-            if (i === 1) {
-                a = rows[0].number;
-            } else if (i === 2) {
-                b = rows[0].number;
-            } else {
-                a = b;
-                b = rows[0].number;
-            }
+        let c;
+        if (i === 1) {
+            c = 0;
+            a = 0;
+        } else if (i === 2) {
+            c = 1;
+            b = 1;
         } else {
-            let c;
-            if (i === 1) {
-                c = 0;
-                a = 0;
-            } else if (i === 2) {
-                c = 1;
-                b = 1;
-            } else {
-                c = +a + +b;
-                a = b;
-                b = c;
-            }
-            sequence.push(c);
-            // console.log([i, c])
-            await db.none('INSERT INTO fibonacci (id, number) VALUES ($1, $2)', [i, c]);
+            c = +a + +b;
+            a = b;
+            b = c;
         }
+        sequence.push(c);
     }
+
+    // Then update the database in one go
+    await db.tx(async t => {
+        for (let i = 1; i <= sequence.length; i++) {
+            await t.none('INSERT INTO fibonacci (id, number) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET number = $2', [i, sequence[i-1]]);
+        }
+    });
 
     res.status(200).json({ result: sequence });
 }
