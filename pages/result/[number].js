@@ -21,8 +21,8 @@ export default function Result() {
     return (
         <div>
         <h1>Fibonacci Sequence</h1>
-        <h3>The first {number} Fibonacci numbers are:</h3>
-        <p>{result.join(', ')}</p>
+        <h2>The first {number} Fibonacci numbers are:</h2>
+        <h3>{result.join(', ')}</h3>
         <button onClick={goBack}>Go Back</button>
         </div>
     );
