@@ -1,5 +1,6 @@
 const pgPromise = require('pg-promise');
 const pgp = pgPromise({});
+//Need to changing this line if this app is used in other enviroment 
 const db = pgp('postgres://dilang:123456@localhost:5432/fibonacci_db');
 
 export default async function handler(req, res) {

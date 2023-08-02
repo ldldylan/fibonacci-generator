@@ -6,6 +6,7 @@ export default function Home() {
     const [number, setNumber] = useState('');
     const router = useRouter();
 
+    //Redirect the user to the result page after submission
     const handleSubmit = (event) => {
         event.preventDefault();
         router.push(`/result/${number}`);

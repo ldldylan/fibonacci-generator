@@ -14,6 +14,7 @@ export default function Result() {
         }
     }, [number]);
 
+    //Redirect the user to the index page
     function goBack() {
         router.push('/')
     };
